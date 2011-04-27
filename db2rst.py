@@ -230,6 +230,9 @@ class Convert(object):
     
     def e_userinput(self, el):
         return u":kbd:`%s`" % (el.text, )
+
+    def e_quote(self, el):
+        return u'"%s"' % (el.text, )
     
     # links
     
