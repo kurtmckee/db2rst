@@ -402,10 +402,9 @@ class Convert(object):
         #if parent in ("book", "chapter", "section", "variablelist", "appendix"):
         return self._make_title(t, level)
     
-    def screen(self, el):
+    def e_screen(self, el):
         return "\n::\n" + self._indent(el, 4) + "\n"
-    
-    literallayout = screen
+    literallayout = e_screen
     
     def blockquote(self, el):
         return self._indent(el, 4)
