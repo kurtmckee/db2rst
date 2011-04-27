@@ -228,6 +228,8 @@ class Convert(object):
         else:
             return u":abbr:`%s`" % (el.text, )
     
+    def e_userinput(self, el):
+        return u":kbd:`%s`" % (el.text, )
     
     # links
     
