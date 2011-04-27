@@ -73,6 +73,21 @@ class Convert(object):
         output = re.sub(r"\n{3,}", "\n\n", output)
         return output.encode('utf-8')
 
+    def _conv(self, el):
+        "element to string conversion; usually calls element_name() to do the job"
+        if el.tag in globals():
+            s = globals()[el.tag](el)
+            assert s, "Error: %s -> None\n" % self._get_path(el)
+            return s
+        elif isinstance(el, ET._Comment):
+            return self.Comment(el) if (el.text and not el.text.isspace()) else ""
+        else:
+            if el.tag not in _not_handled_tags:
+                self._warn("Don't know how to handle <%s>" % el.tag)
+                #self._warn(" ... from path: %s" % self._get_path(el))
+                _not_handled_tags.add(el.tag)
+            return self._concat(el)
+    
     def _warn(self, s):
         sys.stderr.write("WARNING: %s\n" % s)
     
@@ -104,21 +119,6 @@ class Convert(object):
         for i in el.getchildren():
             if i.tail is not None and not i.tail.isspace():
                 self._warn("skipping tail of <%s>: %s" % (_get_path(i), i.tail))
-    
-    def _conv(self, el):
-        "element to string conversion; usually calls element_name() to do the job"
-        if el.tag in globals():
-            s = globals()[el.tag](el)
-            assert s, "Error: %s -> None\n" % self._get_path(el)
-            return s
-        elif isinstance(el, ET._Comment):
-            return self.Comment(el) if (el.text and not el.text.isspace()) else ""
-        else:
-            if el.tag not in _not_handled_tags:
-                self._warn("Don't know how to handle <%s>" % el.tag)
-                #self._warn(" ... from path: %s" % self._get_path(el))
-                _not_handled_tags.add(el.tag)
-            return self._concat(el)
     
     def _no_special_markup(self, el):
         return self._concat(el)
