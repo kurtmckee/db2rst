@@ -216,6 +216,7 @@ class Convert(object):
         return "*%s*" % self._concat(el).strip()
     phrase = e_emphasis
     citetitle = e_emphasis
+    replaceable = e_emphasis
     
     def e_firstterm(self, el):
         self._has_only_text(el)
@@ -362,9 +363,7 @@ class Convert(object):
     def parameter(self, el):
         if el.get("class"): # this hack is specific for fityk manual
             return ":option:`%s`" % self._concat(el).strip()
-        return self.emphasis(el)
-    
-    replaceable = emphasis
+        return self.e_emphasis(el)
     
     def cmdsynopsis(self, el):
         # just remove all markup and remember to change it manually later
