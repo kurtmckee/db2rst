@@ -59,11 +59,19 @@ def _main():
     for elem in tree.getiterator():
         if elem.tag in ("xref", "link"):
             _linked_ids.add(elem.get("linkend"))
-    print TreeRoot(tree.getroot()).TreeRoot().encode('utf-8')
+    print Convert(tree.getroot())
 
-class TreeRoot(object):
+class Convert(object):
     def __init__(self, el):
         self.el = el
+
+    def __str__(self):
+        output = self._conv(self.el)
+        # remove trailing whitespace
+        output = re.sub(r"[ \t]+\n", "\n", output)
+        # leave only one blank line
+        output = re.sub(r"\n{3,}", "\n\n", output)
+        return output.encode('utf-8')
 
     def _warn(self, s):
         sys.stderr.write("WARNING: %s\n" % s)
@@ -194,14 +202,6 @@ class TreeRoot(object):
     ###################           DocBook elements        #####################
     
     # special "elements"
-    
-    def TreeRoot(self):
-        output = self._conv(self.el)
-        # remove trailing whitespace
-        output = re.sub(r"[ \t]+\n", "\n", output)
-        # leave only one blank line
-        output = re.sub(r"\n{3,}", "\n\n", output)
-        return output
     
     def Comment(self, el):
         return self._indent(el, 12, ".. COMMENT: ")
