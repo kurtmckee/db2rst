@@ -233,15 +233,17 @@ class Convert(object):
     
     # links
     
-    def ulink(self, el):
+    def e_ulink(self, el):
         url = el.get("url")
         text = self._concat(el).strip()
         if text.startswith(".. image::"):
             return "%s\n   :target: %s\n\n" % (text, url)
         elif url == text:
             return text
-        else:
+        elif text.strip():
             return "`%s <%s>`_" % (text, url)
+        else:
+            return "`%s <%s>`_" % (url, url)
     
     # TODO:
     # put labels where referenced ids are 
