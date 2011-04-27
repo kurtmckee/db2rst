@@ -80,7 +80,10 @@ class Convert(object):
             assert s, "Error: %s -> None\n" % self._get_path(el)
             return s
         elif isinstance(el, ET._Comment):
-            return self.Comment(el) if (el.text and not el.text.isspace()) else ""
+            if el.text.strip():
+                return self.Comment(el)
+            else:
+                return u''
         else:
             if el.tag not in _not_handled_tags:
                 self._warn("Don't know how to handle <%s>" % el.tag)
