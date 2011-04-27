@@ -222,7 +222,11 @@ class Convert(object):
         self._has_only_text(el)
         return ":dfn:`%s`" % el.text
     
-    acronym = _no_special_markup
+    def e_acronym(self, el):
+        if el.attrib.get('condition'):
+            return u":abbr:`%s (%s)`" % (el.text, el.attrib['condition'])
+        else:
+            return u":abbr:`%s`" % (el.text, )
     
     
     # links
