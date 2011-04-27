@@ -212,12 +212,12 @@ class Convert(object):
     
     # general inline elements
     
-    def emphasis(self, el):
+    def e_emphasis(self, el):
         return "*%s*" % self._concat(el).strip()
-    phrase = emphasis
-    citetitle = emphasis
+    phrase = e_emphasis
+    citetitle = e_emphasis
     
-    def firstterm(self, el):
+    def e_firstterm(self, el):
         self._has_only_text(el)
         return ":dfn:`%s`" % el.text
     
