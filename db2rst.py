@@ -74,9 +74,9 @@ class Convert(object):
         return output.encode('utf-8')
 
     def _conv(self, el):
-        "element to string conversion; usually calls element_name() to do the job"
-        if el.tag in globals():
-            s = globals()[el.tag](el)
+        "element to string conversion; usually calls e_element_name() to do the job"
+        if hasattr(self, 'e_' + el.tag):
+            s = getattr(self, 'e_' + el.tag)(el)
             assert s, "Error: %s -> None\n" % self._get_path(el)
             return s
         elif isinstance(el, ET._Comment):
