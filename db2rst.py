@@ -75,8 +75,8 @@ class Convert(object):
 
     def _conv(self, el):
         "element to string conversion; usually calls e_element_name() to do the job"
-        if hasattr(self, 'e_' + el.tag):
-            s = getattr(self, 'e_' + el.tag)(el)
+        if hasattr(self, 'e_' + str(el.tag)):
+            s = getattr(self, 'e_' + str(el.tag))(el)
             assert s, "Error: %s -> None\n" % self._get_path(el)
             return s
         elif isinstance(el, ET._Comment):
