@@ -255,10 +255,10 @@ class Convert(object):
     # :ref:`Link title <label-name>`
     # (in DocBook was: the section called “Variables”)
     
-    def xref(self, el):
+    def e_xref(self, el):
         return ":ref:`%s`" % el.get("linkend")
     
-    def link(self, el):
+    def e_link(self, el):
         return ":ref:`%s <%s>`" % (self._concat(el).strip(), el.get("linkend"))
     
     
