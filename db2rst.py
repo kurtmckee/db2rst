@@ -489,15 +489,15 @@ class Convert(object):
     
     # admonition directives
     
-    def note(self, el):
+    def e_note(self, el):
         return self._indent(el, 3, ".. note:: ")
-    def caution(self, el):
+    def e_caution(self, el):
         return self._indent(el, 3, ".. caution:: ")
-    def important(self, el):
+    def e_important(self, el):
         return self._indent(el, 3, ".. important:: ")
-    def tip(self, el):
+    def e_tip(self, el):
         return self._indent(el, 3, ".. tip:: ")
-    def warning(self, el):
+    def e_warning(self, el):
         return self._indent(el, 3, ".. warning:: ")
     
     
