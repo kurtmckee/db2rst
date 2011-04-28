@@ -70,12 +70,17 @@ def _main():
         f = open(os.path.join(output_dir, 'out.rst'), 'wb')
         f.write(str(obj))
         f.close()
+        for fname in obj.files:
+            f = open(os.path.join(output_dir, fname + '.rst'), 'wb')
+            f.write(obj.files[fname].encode('utf-8'))
+            f.close()
     else:
         print obj
 
 class Convert(object):
     def __init__(self, el):
         self.el = el
+        self.files = {}
 
     def __str__(self):
         output = self._conv(self.el)
@@ -195,12 +200,20 @@ class Convert(object):
         return sep.join(self.self._conv(i) for i in el.getchildren())
     
     def _block_separated_with_blank_line(self, el):
-        s = "\n\n" + self._concat(el)
-        global _buffer
-        if _buffer:
-            s += "\n\n" + _buffer
-            _buffer = ""
-        return s
+        pi = [i for i in el.iterchildren() if isinstance(i, ET._ProcessingInstruction)]
+        if pi and 'filename=' in pi[0].text:
+            fname = pi[0].text.split('=')[1][1:-1].split('.')[0]
+            #import pdb; pdb.set_trace()
+            el.remove(pi[0])
+            self.files[fname] = self._conv(el)
+            return "\n"
+        else:
+            s = "\n\n" + self._concat(el)
+            global _buffer
+            if _buffer:
+                s += "\n\n" + _buffer
+                _buffer = ""
+            return s
     
     def _indent(self, el, indent, first_line=None):
         "returns indented block with exactly one blank line at the beginning"
