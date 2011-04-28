@@ -414,12 +414,12 @@ class Convert(object):
     def blockquote(self, el):
         return self._indent(el, 4)
     
-    book = _no_special_markup
-    article = _no_special_markup
-    para = _block_separated_with_blank_line
-    section = _block_separated_with_blank_line
-    appendix = _block_separated_with_blank_line
-    chapter = _block_separated_with_blank_line
+    e_book = _no_special_markup
+    e_article = _no_special_markup
+    e_para = _block_separated_with_blank_line
+    e_section = _block_separated_with_blank_line
+    e_appendix = _block_separated_with_blank_line
+    e_chapter = _block_separated_with_blank_line
     
     
     # lists
