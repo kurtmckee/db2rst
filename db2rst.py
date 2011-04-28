@@ -157,7 +157,7 @@ class Convert(object):
         return s
     
     def _concat(self, el):
-        "concatate .text with children (self.self._conv'ed to text) and their tails"
+        "concatate .text with children (self._conv'ed to text) and their tails"
         s = ""
         id = el.get("id")
         if id is not None and (WRITE_UNUSED_LABELS or id in _linked_ids):
@@ -307,7 +307,7 @@ class Convert(object):
         else:
             s = ""
         for mo in el.findall("mediaobject"):
-            s += "\n" + self.self._conv(mo)
+            s += "\n" + self._conv(mo)
         return s
     
     def mediaobject(self, el, substitute=False):
@@ -526,11 +526,11 @@ class Convert(object):
         if auth is None:
             auth = el.find("author")
         if auth is not None:
-            s += "%s. " % self.self._conv(auth)
+            s += "%s. " % self._conv(auth)
     
         editor = el.find("editor")
         if editor is not None:
-            s += "%s. " % self.self._conv(editor)
+            s += "%s. " % self._conv(editor)
     
         title = el.find("title")
         if title is not None:
