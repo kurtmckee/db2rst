@@ -31,6 +31,8 @@ REMOVE_COMMENTS = False
 # If this option is False, only labels that are used in links are generated.
 WRITE_UNUSED_LABELS = False
 
+import os
+import os.path
 import sys
 import re
 import lxml.etree as ET
@@ -49,17 +51,27 @@ _substitutions = set()
 _buffer = ""
 
 def _main():
-    if len(sys.argv) != 2 or sys.argv[1] == '-h' or sys.argv[1] == '--help':
+    if len(sys.argv) < 2 or len(sys.argv) > 3 or sys.argv[1] == '-h' or sys.argv[1] == '--help':
         sys.stderr.write(__doc__)
         sys.exit()
     input_file = sys.argv[1]
+    if len(sys.argv) == 3:
+        output_dir = sys.argv[2]
+    else:
+        output_dir = None
     sys.stderr.write("Parsing XML file `%s'...\n" % input_file)
     parser = ET.XMLParser(remove_comments=REMOVE_COMMENTS)
     tree = ET.parse(input_file, parser=parser)
     for elem in tree.getiterator():
         if elem.tag in ("xref", "link"):
             _linked_ids.add(elem.get("linkend"))
-    print Convert(tree.getroot())
+    obj = Convert(tree.getroot())
+    if output_dir is not None:
+        f = open(os.path.join(output_dir, 'out.rst'), 'wb')
+        f.write(str(obj))
+        f.close()
+    else:
+        print obj
 
 class Convert(object):
     def __init__(self, el):
