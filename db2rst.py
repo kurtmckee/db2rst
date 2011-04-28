@@ -197,7 +197,7 @@ class Convert(object):
     
     def _join_children(self, el, sep):
         self._has_no_text(el)
-        return sep.join(self.self._conv(i) for i in el.getchildren())
+        return sep.join(self._conv(i) for i in el.getchildren())
     
     def _block_separated_with_blank_line(self, el):
         pi = [i for i in el.iterchildren() if isinstance(i, ET._ProcessingInstruction)]
@@ -449,18 +449,18 @@ class Convert(object):
     
     # lists
     
-    def itemizedlist(self, el, bullet="-"):
+    def e_itemizedlist(self, el, bullet="-"):
         # ItemizedList ::= (ListItem+)
         s = ""
         for i in el.getchildren():
             s += self._indent(i, 2, bullet+" ")
         return s + "\n\n"
     
-    def orderedlist(self, el):
+    def e_orderedlist(self, el):
         # OrderedList ::= (ListItem+)
-        return itemizedlist(el, bullet="#")
+        return self.e_itemizedlist(el, bullet="#")
     
-    def simplelist(self, el):
+    def e_simplelist(self, el):
         # SimpleList ::= (Member+)
         # The simplelist is the most complicated one. There are 3 kinds of 
         # SimpleList: Inline, Horiz and Vert.
@@ -470,16 +470,16 @@ class Convert(object):
             # members should be rendered in tabular fashion, with number
             # of columns equal el[columns]
             # but we simply transform it to bullet list
-            return itemizedlist(el, bullet="+")
+            return self.e_itemizedlist(el, bullet="+")
     
-    def variablelist(self, el):
+    def e_variablelist(self, el):
         #VariableList ::= ((Title,TitleAbbrev?)?, VarListEntry+)
         #VarListEntry ::= (Term+,ListItem)
         self._supports_only(el, ("title", "varlistentry"))
         s = ""
         title = el.find("title")
         if title is not None:
-            s += self.self._conv(title)
+            s += self._conv(title)
         for entry in el.findall("varlistentry"):
             s += "\n\n"
             s += ", ".join(self._concat(i).strip() for i in entry.findall("term"))
