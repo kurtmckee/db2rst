@@ -556,8 +556,26 @@ class Convert(object):
     def e_bibliography(self, el):
         self._supports_only(el, ("biblioentry",))
         return self._make_title("Bibliography", 2) + "\n" + self._join_children(el, "\n")
-    
-    
+
+    # table support
+
+    def _calc_col_width(self, el):
+        return len(self._conv(el).strip())
+
+    def e_table(self, el):
+        # get each column size
+        text = (el.getchildren()[0].text or '') + (el.getchildren()[0].tail or '') + '\n\n'
+        cols = int(el.find('tgroup').attrib['cols'])
+        colsizes = map(max, zip(*[map(self._calc_col_width, r) for r in el.xpath('.//row')]))
+        fmt = ' '.join(['%%-%is' % (size,) for size in colsizes]) + '\n'
+        text += fmt % tuple(['=' * size for size in colsizes])
+        text += fmt % tuple(map(self._conv, el.find('tgroup').find('thead').find('row').findall('entry')))
+        text += fmt % tuple(['=' * size for size in colsizes])
+        for row in el.find('tgroup').find('tbody').findall('row'):
+            text += fmt % tuple(map(self._conv, row.findall('entry')))
+        text += fmt % tuple(['=' * size for size in colsizes])
+        return text
+        
 
 if __name__ == '__main__':
     _main()
