@@ -68,11 +68,11 @@ def _main():
     obj = Convert(tree.getroot())
     if output_dir is not None:
         f = open(os.path.join(output_dir, 'out.rst'), 'wb')
-        f.write(str(obj))
+        f.write(str(obj).strip())
         f.close()
         for fname in obj.files:
             f = open(os.path.join(output_dir, fname + '.rst'), 'wb')
-            f.write(obj.files[fname].encode('utf-8'))
+            f.write(obj.files[fname].encode('utf-8').strip())
             f.close()
     else:
         print obj
