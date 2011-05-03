@@ -435,6 +435,7 @@ class Convert(object):
     def e_screen(self, el):
         return "\n::\n" + self._indent(el, 4) + "\n"
     e_literallayout = e_screen
+    e_programlisting = e_screen
     
     def e_blockquote(self, el):
         return self._indent(el, 4)
