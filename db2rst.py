@@ -129,16 +129,16 @@ class Convert(object):
     def _has_only_text(self, el):
         "print warning if there are any children"
         if el.getchildren():
-            self._warn("children of %s are skipped: %s" % (_get_path(el),
+            self._warn("children of %s are skipped: %s" % (self._get_path(el),
                                   ", ".join(self._what(i) for i in el.getchildren())))
     
     def _has_no_text(self, el):
         "print warning if there is any non-blank text"
         if el.text is not None and not el.text.isspace():
-            self._warn("skipping text of <%s>: %s" % (_get_path(el), el.text))
+            self._warn("skipping text of <%s>: %s" % (self._get_path(el), el.text))
         for i in el.getchildren():
             if i.tail is not None and not i.tail.isspace():
-                self._warn("skipping tail of <%s>: %s" % (_get_path(i), i.tail))
+                self._warn("skipping tail of <%s>: %s" % (self._get_path(i), i.tail))
     
     def _no_special_markup(self, el):
         return self._concat(el)
@@ -291,15 +291,15 @@ class Convert(object):
     # the DocBook syntax to embed equations is sick. Usually, (inline)equation is
     # a (inline)mediaobject, which is imageobject + textobject
     
-    def inlineequation(self, el):
+    def e_inlineequation(self, el):
         self._supports_only(el, ("inlinemediaobject",))
         return self._concat(el).strip()
     
-    def informalequation(self, el):
+    def e_informalequation(self, el):
         self._supports_only(el, ("mediaobject",))
         return self._concat(el)
     
-    def equation(self, el):
+    def e_equation(self, el):
         self._supports_only(el, ("title", "mediaobject"))
         title = el.find("title")
         if title is not None:
@@ -310,7 +310,7 @@ class Convert(object):
             s += "\n" + self._conv(mo)
         return s
     
-    def mediaobject(self, el, substitute=False):
+    def e_mediaobject(self, el, substitute=False):
         global _substitutions
         self._supports_only(el, ("imageobject", "textobject"))
         # i guess the most common case is one imageobject and one (or none)
@@ -341,22 +341,22 @@ class Convert(object):
         else:
             return img
     
-    def inlinemediaobject(self, el):
+    def e_inlinemediaobject(self, el):
         global _buffer
         subst, symbols = self.mediaobject(el, substitute=True)
         _buffer += subst
         return "".join("|%s|" % i for i in symbols)
     
-    def subscript(self, el):
+    def e_subscript(self, el):
         return "\ :sub:`%s`" % self._concat(el).strip()
     
-    def superscript(self, el):
+    def e_superscript(self, el):
         return "\ :sup:`%s`" % self._concat(el).strip()
     
     
     # GUI elements
     
-    def menuchoice(self, el):
+    def e_menuchoice(self, el):
         if all(i.tag in ("guimenu", "guimenuitem") for i in el.getchildren()):
             self._has_no_text(el)
             return ":menuselection:`%s`" % \
@@ -364,66 +364,66 @@ class Convert(object):
         else:
             return self._concat(el)
     
-    def guilabel(self, el):
+    def e_guilabel(self, el):
         self._has_only_text(el)
         return ":guilabel:`%s`" % el.text.strip()
-    guiicon = guilabel
-    guimenu = guilabel
-    guimenuitem = guilabel
-    mousebutton = _no_special_markup
+    e_guiicon = e_guilabel
+    e_guimenu = e_guilabel
+    e_guimenuitem = e_guilabel
+    e_mousebutton = _no_special_markup
     
     
     # system elements
     
-    def keycap(self, el):
+    def e_keycap(self, el):
         self._has_only_text(el)
         return ":kbd:`%s`" % el.text
     
-    def application(self, el):
+    def e_application(self, el):
         self._has_only_text(el)
         return ":program:`%s`" % el.text.strip()
     
-    def userinput(self, el):
+    def e_userinput(self, el):
         return "``%s``" % self._concat(el).strip()
     
-    systemitem = userinput
-    prompt = userinput
+    e_systemitem = e_userinput
+    e_prompt = e_userinput
     
-    def filename(self, el):
+    def e_filename(self, el):
         self._has_only_text(el)
         return ":file:`%s`" % el.text
     
-    def command(self, el):
+    def e_command(self, el):
         return ":command:`%s`" % self._concat(el).strip()
     
-    def parameter(self, el):
+    def e_parameter(self, el):
         if el.get("class"): # this hack is specific for fityk manual
             return ":option:`%s`" % self._concat(el).strip()
         return self.e_emphasis(el)
     
-    def cmdsynopsis(self, el):
+    def e_cmdsynopsis(self, el):
         # just remove all markup and remember to change it manually later
         return "\n\nCMDSYN: %s\n" % self._no_markup(el)
     
     
     # programming elements
     
-    def function(self, el):
+    def e_function(self, el):
         #self._has_only_text(el)
         #return ":func:`%s`" % self._concat(el)
         return "``%s``" % self._concat(el).strip()
     
-    def constant(self, el):
+    def e_constant(self, el):
         self._has_only_text(el)
         #return ":constant:`%s`" % el.text
         return "``%s``" % el.text.strip()
     
-    varname = constant
+    e_varname = e_constant
     
     
     # popular block elements
     
-    def title(self, el):
+    def e_title(self, el):
         # Titles in some elements may be handled from the title's parent.
         t = self._concat(el).strip()
         level = self._get_level(el)
@@ -434,9 +434,9 @@ class Convert(object):
     
     def e_screen(self, el):
         return "\n::\n" + self._indent(el, 4) + "\n"
-    literallayout = e_screen
+    e_literallayout = e_screen
     
-    def blockquote(self, el):
+    def e_blockquote(self, el):
         return self._indent(el, 4)
     
     e_book = _no_special_markup
@@ -503,16 +503,16 @@ class Convert(object):
     
     # bibliography
     
-    def author(self, el):
+    def e_author(self, el):
         self._supports_only(el, ("firstname", "surname"))
         return el.findtext("firstname") + " " + el.findtext("surname")
     
-    editor = author
+    e_editor = e_author
     
-    def authorgroup(self, el):
+    def e_authorgroup(self, el):
         return self._join_children(el, ", ")
     
-    def biblioentry(self, el):
+    def e_biblioentry(self, el):
         self._supports_only(el, ("abbrev", "authorgroup", "author", "editor", "title",
                             "publishername", "pubdate", "address"))
         s = "\n"
@@ -553,7 +553,7 @@ class Convert(object):
             s += "%s. " % pubdate.text
         return s
     
-    def bibliography(self, el):
+    def e_bibliography(self, el):
         self._supports_only(el, ("biblioentry",))
         return self._make_title("Bibliography", 2) + "\n" + self._join_children(el, "\n")
     
