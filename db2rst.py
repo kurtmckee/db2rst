@@ -430,7 +430,7 @@ class Convert(object):
     def e_constant(self, el):
         self._has_only_text(el)
         #return ":constant:`%s`" % el.text
-        return "``%s``" % ((el.text or '') + ''.join(map(self._conv, el.getchildren())) + (el.tail or '')).strip()
+        return "``%s``" % ((el.text or '') + ''.join(map(self._conv, el.getchildren())))
     
     e_varname = e_constant
     
