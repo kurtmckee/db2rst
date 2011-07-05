@@ -67,13 +67,27 @@ def _main():
             _linked_ids.add(elem.get("linkend"))
     obj = Convert(tree.getroot())
     if output_dir is not None:
-        f = open(os.path.join(output_dir, 'out.rst'), 'wb')
-        f.write(str(obj).strip())
-        f.close()
+        output = str(obj).strip()
         for fname in obj.files:
             f = open(os.path.join(output_dir, fname + '.rst'), 'wb')
             f.write(obj.files[fname].encode('utf-8').strip())
             f.close()
+        # write the index if it doesn't exist already
+        if 'index' not in obj.files:
+            f = open(os.path.join(output_dir, 'index.rst'), 'wb')
+            f.write(output)
+            f.write('\n\n.. toctree::\n   :maxdepth: 1\n\n')
+            for fname in sorted(obj.files):
+                f.write('   %s\n' % (fname, ))
+            f.close()
+        # write a simple conf.py
+        c = open(os.path.join(output_dir, 'conf.py'), 'wb')
+        c.write("extensions = []\n")
+        c.write("master_doc = 'index'\n")
+        c.write("project = u'projname'\n")
+        c.write("#copyright = u'2011, authname'\n")
+        c.write("exclude_patterns = ['_build']\n")
+        c.close()
     else:
         print obj
 
