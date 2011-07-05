@@ -473,7 +473,7 @@ class Convert(object):
     
     def e_orderedlist(self, el):
         # OrderedList ::= (ListItem+)
-        return self.e_itemizedlist(el, bullet="#")
+        return self.e_itemizedlist(el, bullet="#.")
     
     def e_simplelist(self, el):
         # SimpleList ::= (Member+)
