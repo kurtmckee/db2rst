@@ -37,7 +37,7 @@ import sys
 import re
 import lxml.etree as ET
 
-# to avoid dupliate error reports
+# to avoid duplicate error reports
 _not_handled_tags = set()
 
 # to remember which id/labels are really needed
