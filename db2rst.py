@@ -21,6 +21,8 @@
     :license: BSD.
 """
 
+__contributors__ = ('Kurt McKee <contactme@kurtmckee.org>',)
+
 # If this option is True, XML comment are discarded. Otherwise, they are
 # converted to ReST comments.
 # Note that ReST doesn't support inline comments. XML comments
