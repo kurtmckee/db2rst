@@ -21,6 +21,12 @@
     :license: BSD.
 """
 
+import os
+import os.path
+import sys
+import re
+import lxml.etree as ET
+
 __contributors__ = ('Kurt McKee <contactme@kurtmckee.org>',)
 
 # If this option is True, XML comment are discarded. Otherwise, they are
@@ -32,12 +38,6 @@ REMOVE_COMMENTS = False
 # id attributes of DocBook elements are translated to ReST labels.
 # If this option is False, only labels that are used in links are generated.
 WRITE_UNUSED_LABELS = False
-
-import os
-import os.path
-import sys
-import re
-import lxml.etree as ET
 
 # to avoid duplicate error reports
 _not_handled_tags = set()
