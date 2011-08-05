@@ -15,7 +15,9 @@
     the script outputs incorrect (nested) reST (:sub:`*x*`)
     and it is up to user to decide how to change it.
 
-    Usage: db2rst.py file.xml > file.rst
+    Usage:
+        db2rst.py file.xml > file.rst
+        db2rst.py file.xml output_directory/
 
     :copyright: 2009 by Marcin Wojdyr.
     :license: BSD.
