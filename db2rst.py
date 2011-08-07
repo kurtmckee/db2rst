@@ -29,7 +29,9 @@ import sys
 import re
 import lxml.etree as ET
 
-__contributors__ = ('Kurt McKee <contactme@kurtmckee.org>',)
+__contributors__ = ('Kurt McKee <contactme@kurtmckee.org>',
+                    'Anthony Scopatz <ascopatz@enthought.com>',
+                   )
 
 # If this option is True, XML comment are discarded. Otherwise, they are
 # converted to ReST comments.
