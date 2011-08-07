@@ -210,7 +210,9 @@ class Convert(object):
     def _make_title(self, t, level):
         if level == 1:
             return "\n\n" + "=" * len(t) + "\n" + t + "\n" + "=" * len(t)
-        char = ["#", "=", "-", "~", "^", "." ]
+        char = ["#", "=", "-", "~", "^", ".", "*", "+", "_", ",", ":", "'", 
+                "!", "?", '"', '$', '%', '&', ';', '(', ')', '/', '<', '>', 
+                "@", "[", "]", "`", "{", "}", "|", "\\", ]
         return "\n\n" + t + "\n" + char[level-2] * len(t)
     
     def _join_children(self, el, sep):
