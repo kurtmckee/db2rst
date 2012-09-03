@@ -528,7 +528,10 @@ class Convert(object):
     
     def e_author(self, el):
         self._supports_only(el, ("firstname", "surname"))
-        return el.findtext("firstname") + " " + el.findtext("surname")
+        firstname = el.findtext("firstname") or ""
+        surname = el.findtext ("surname") or ""
+        delimiter = " " if firstname and surname else ""
+        return firstname + delimiter + surname
     
     e_editor = e_author
     
